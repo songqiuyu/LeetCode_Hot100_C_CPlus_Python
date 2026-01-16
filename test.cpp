@@ -2,50 +2,60 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <stack>
 using namespace std;
 
-
-
-int lengthOfLongestSubstring(string s)
+bool isValid(string s)
 {
-    // 纯暴力的方式
+    // 栈
+    stack<char> S;
 
-    int result = 0;
-    int i;
-    int j;
-
-    int len;
-    for (i = 0; i < s.size() - 1; i++)
+    for (int i = 0; i < s.size(); i++)
     {
-        vector<int> m(128, 0);
-        len = 0;
-        m[s[i]]++;
-        for (j = i + 1; j < s.size(); j++)
+        if (s[i] == '(' || s[i] == '{' || s[i] == '[')
         {
-            if (m[s[j]] >= 1)
+            S.push(s[i]);
+        }
+
+        if (s[i] == ')' || s[i] == '}' || s[i] == ']')
+        {
+            char top = S.top();
+
+            if (top == '(' && s[i] != ')')
             {
-                if (j == i + 1)
-                    len = 1;
-                else
-                    len = j - i + 1;
-                result = result < len ? len : result;
-                break;
+                return false;
+            }
+            else if (top == '{' && s[i] != '}')
+            {
+                return false;
+            }
+            else if (top == '[' && s[i] != ']')
+            {
+                return false;
             }
             else
             {
-                m[s[j]]++;
+                S.pop();
             }
         }
     }
 
-    return result;
+    // 需要判断栈是否为空
+    if (!S.empty())
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 int main()
 {
 
-    string s = "abcabcbb";
-    int result = lengthOfLongestSubstring(s);
+    string s = "()";
+    int result = isValid(s);
     printf("%d\n", result);
     return 0;
 }
