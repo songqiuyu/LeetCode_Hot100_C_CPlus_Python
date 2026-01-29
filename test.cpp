@@ -5,57 +5,44 @@
 #include <stack>
 using namespace std;
 
-bool isValid(string s)
+int hammingDistance(int x, int y)
 {
-    // 栈
-    stack<char> S;
-
-    for (int i = 0; i < s.size(); i++)
+//01011101   
+//01001001
+    int result = 0;
+    while (x > 0 && y > 0)
     {
-        if (s[i] == '(' || s[i] == '{' || s[i] == '[')
+        if ((x & 1) != (y & 1))
         {
-            S.push(s[i]);
+            result++;
         }
+        x = x >> 1;
+        y = y >> 1;
+    }
 
-        if (s[i] == ')' || s[i] == '}' || s[i] == ']')
+    while (x > 0){
+                if (x & 1 != 0)
         {
-            char top = S.top();
-
-            if (top == '(' && s[i] != ')')
-            {
-                return false;
-            }
-            else if (top == '{' && s[i] != '}')
-            {
-                return false;
-            }
-            else if (top == '[' && s[i] != ']')
-            {
-                return false;
-            }
-            else
-            {
-                S.pop();
-            }
+            result++;
         }
     }
 
-    // 需要判断栈是否为空
-    if (!S.empty())
+    if (x > 0)
     {
-        return false;
+
     }
-    else
+    else if (y > 0)
     {
-        return true;
+        if (y & 1 != 0)
+        {
+            result++;
+        }
     }
+
+    return result;
 }
-
 int main()
 {
-
-    string s = "()";
-    int result = isValid(s);
-    printf("%d\n", result);
-    return 0;
+    hammingDistance(93, 73);
 }
+
