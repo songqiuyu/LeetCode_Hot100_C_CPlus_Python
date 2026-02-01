@@ -5,44 +5,40 @@
 #include <stack>
 using namespace std;
 
-int hammingDistance(int x, int y)
+vector<int> dailyTemperatures(vector<int> &temperatures)
 {
-//01011101   
-//01001001
-    int result = 0;
-    while (x > 0 && y > 0)
+    // 栈是先进后出，可以保证一直弹，入栈的一定是比当前要低的，一旦不低，就开始循环弹出求解
+    stack<int> days;
+    int n = temperatures.size();
+    vector<int> result(n, 0);
+
+    for (int i = 0; i < n; i++)
     {
-        if ((x & 1) != (y & 1))
+        if (days.empty())
         {
-            result++;
+            days.push(i);
         }
-        x = x >> 1;
-        y = y >> 1;
-    }
-
-    while (x > 0){
-                if (x & 1 != 0)
+        else
         {
-            result++;
-        }
-    }
+            int top_day = days.top();
+            while (temperatures[top_day] < temperatures[i] && !days.empty())
+            {
+                result[top_day] = i - top_day;
+                days.pop();
+                top_day = days.top();
+            }
 
-    if (x > 0)
-    {
-
-    }
-    else if (y > 0)
-    {
-        if (y & 1 != 0)
-        {
-            result++;
+            if (temperatures[top_day] >= temperatures[i] || days.empty())
+            {
+                days.push(i);
+            }
         }
     }
-
     return result;
 }
+
 int main()
 {
-    hammingDistance(93, 73);
+    vector<int> test = {73, 74, 75, 71, 69, 72, 76, 73};
+    dailyTemperatures(test);
 }
-
