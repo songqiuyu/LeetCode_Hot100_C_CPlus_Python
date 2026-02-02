@@ -5,40 +5,34 @@
 #include <stack>
 using namespace std;
 
-vector<int> dailyTemperatures(vector<int> &temperatures)
+int removeElement(vector<int> &nums, int val)
 {
-    // 栈是先进后出，可以保证一直弹，入栈的一定是比当前要低的，一旦不低，就开始循环弹出求解
-    stack<int> days;
-    int n = temperatures.size();
-    vector<int> result(n, 0);
+    // 双指针，一个指的位置往左全是已经好了的数，一个指的就是后续的值
+    int L = 0;
+    int R = 0;
+    int ans = 0;
+    int n = nums.size();
 
-    for (int i = 0; i < n; i++)
+    while (R < n)
     {
-        if (days.empty())
+        if (nums[R] == val)
         {
-            days.push(i);
+            R++;
         }
         else
         {
-            int top_day = days.top();
-            while (temperatures[top_day] < temperatures[i] && !days.empty())
-            {
-                result[top_day] = i - top_day;
-                days.pop();
-                top_day = days.top();
-            }
-
-            if (temperatures[top_day] >= temperatures[i] || days.empty())
-            {
-                days.push(i);
-            }
+            nums[L] = nums[R];
+            ans++;
+            L++;
+            R++;
         }
     }
-    return result;
-}
 
+    return ans;
+}
 int main()
 {
-    vector<int> test = {73, 74, 75, 71, 69, 72, 76, 73};
-    dailyTemperatures(test);
+    vector<int> numbers = {0, 1, 2, 2, 3, 0, 4, 2};
+
+    removeElement(numbers, 2);
 }
